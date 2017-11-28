@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const priceRoutes = require('./routes/priceRoutes');
 
-const port = process.env.PORT || 8080;
+const port = process.env.$PORT || process.env.port || 8080;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
