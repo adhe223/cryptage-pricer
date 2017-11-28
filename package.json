@@ -2,7 +2,7 @@
   "name": "cryptage-pricer",
   "version": "1.0.0",
   "description": "Cryptage-Pricer",
-  "main": "index.js",
+  "main": "./src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./src/app.js",
@@ -24,5 +24,8 @@
     "coinbase": "^2.0.6",
     "express": "^4.16.2",
     "node-fetch": "^1.7.3"
+  },
+  "engines": {
+    "node": "8.8.1"
   }
 }
