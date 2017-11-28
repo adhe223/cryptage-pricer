@@ -10,6 +10,9 @@ const currencyToMarketMap = {
 const getPrice = currency => {
   return fetch(`${apiBase}?market=${currencyToMarketMap[currency]}`)
     .then(res => {
+      if (!res.ok) {
+        throw new Error('Failed to fetch from bittrex');
+      }
       return res.json();
     })
     .then(payload => {
@@ -23,7 +26,7 @@ const getPrice = currency => {
       };
     })
     .catch(err => {
-      throw new Error(err); // Bubble up!
+      throw err; // Bubble up!
     });
 };
 
