@@ -1,22 +1,34 @@
 const coinbase = require('../exchanges/coinbase');
+const bittrex = require('../exchanges/bittrex');
+const supportedCurrencies = require('../currencies');
 
 const getPrices = (req, res) => {
   console.log('Finding prices');
-  if (!req.body.currencies) {
-    getAllPrices(req, res);
-  }
 
-  // Get specific currencies based on request
-};
+  const currencies = req.body.currencies || supportedCurrencies;
+  const pricePromises = [];
 
-const getAllPrices = (req, res) => {
-  console.log('Finding all prices');
-  coinbase
-    .getPrice('BTC')
-    .then(price => {
-      res.send({
-        btc: price
+  currencies.forEach(currency => {
+    pricePromises.push(coinbase.getPrice(currency));
+    pricePromises.push(bittrex.getPrice(currency));
+  });
+
+  Promise.all(pricePromises)
+    .then(exchangeRates => {
+      const pricePayload = {};
+      Object.keys(exchangeRates).forEach(exchangeRateKey => {
+        const exchange = exchangeRates[exchangeRateKey].exchange;
+        const currency = exchangeRates[exchangeRateKey].currency;
+        const price = exchangeRates[exchangeRateKey].price;
+
+        if (!pricePayload[exchange]) {
+          pricePayload[exchange] = {};
+        }
+
+        pricePayload[exchange][currency] = price;
       });
+
+      res.send(pricePayload);
       res.end();
     })
     .catch(err => {

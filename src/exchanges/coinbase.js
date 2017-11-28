@@ -12,8 +12,11 @@ const getPrice = currency => {
         if (err) {
           return reject(err);
         }
-        console.log(payload.data.rates['USD']);
-        return resolve(payload.data.rates['USD']);
+        return resolve({
+          exchange: 'coinbase',
+          currency,
+          price: payload.data.rates['USD']
+        });
       });
     } catch (err) {
       return reject(err);
