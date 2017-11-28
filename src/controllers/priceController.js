@@ -3,9 +3,40 @@ const bittrex = require('../exchanges/bittrex');
 const supportedCurrencies = require('../currencies');
 
 const getPrices = (req, res) => {
-  console.log('Finding prices');
-
   const currencies = req.body.currencies || supportedCurrencies;
+  _getPrices(currencies)
+    .then(priceData => {
+      res.send(priceData);
+      res.end();
+    })
+    .catch(err => {
+      console.log(err);
+      res.send(err);
+      res.end();
+    });
+};
+
+const getPriceDisparity = (req, res) => {
+  const currencies = req.body.currencies || supportedCurrencies;
+  _getPrices(currencies)
+    .then(priceData => {
+      const disparityPayload = {};
+      currencies.forEach(currency => {
+        disparityPayload[currency] =
+          priceData['coinbase'][currency] / priceData['bittrex'][currency];
+      });
+
+      res.send(disparityPayload);
+      res.end();
+    })
+    .catch(err => {
+      console.log(err);
+      res.send(err);
+      res.end();
+    });
+};
+
+const _getPrices = currencies => {
   const pricePromises = [];
 
   currencies.forEach(currency => {
@@ -13,7 +44,7 @@ const getPrices = (req, res) => {
     pricePromises.push(bittrex.getPrice(currency));
   });
 
-  Promise.all(pricePromises)
+  return Promise.all(pricePromises)
     .then(exchangeRates => {
       const pricePayload = {};
       Object.keys(exchangeRates).forEach(exchangeRateKey => {
@@ -28,14 +59,14 @@ const getPrices = (req, res) => {
         pricePayload[exchange][currency] = price;
       });
 
-      res.send(pricePayload);
-      res.end();
+      return pricePayload;
     })
     .catch(err => {
-      console.log(err);
+      throw new Error(err); // Bubble up!
     });
 };
 
 module.exports = {
-  getPrices
+  getPrices,
+  getPriceDisparity
 };

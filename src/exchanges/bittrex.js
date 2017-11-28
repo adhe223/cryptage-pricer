@@ -23,7 +23,7 @@ const getPrice = currency => {
       };
     })
     .catch(err => {
-      console.log(err);
+      throw new Error(err); // Bubble up!
     });
 };
 
