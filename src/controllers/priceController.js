@@ -3,7 +3,6 @@ const bittrex = require('../exchanges/bittrex');
 const bithumb = require('../exchanges/bithumb');
 const bitfinex = require('../exchanges/bitfinex');
 const supportedCurrencies = require('../currencies');
-const supportedExchanges = require('../exchanges/supported');
 
 const getPrices = (req, res) => {
   const currencies = req.body.currencies || supportedCurrencies;
@@ -23,12 +22,6 @@ const getPriceDisparity = (req, res) => {
   const currencies = req.body.currencies || supportedCurrencies;
   _getPrices(currencies)
     .then(priceData => {
-      // const disparityPayload = {};
-      // currencies.forEach(currency => {
-      //   disparityPayload[currency] =
-      //     priceData['coinbase'][currency] / priceData['bittrex'][currency];
-      // });
-
       res.send(_generateDisparityPayload(priceData));
       res.end();
     })
@@ -78,12 +71,9 @@ const _generateDisparityPayload = pricePayload => {
 
   for (let i = 0; i < exchanges.length; i++) {
     const currentExchange = exchanges[i];
-    // Look at the other exchanges
-    for (let j = 0; j < exchanges.length; j++) {
-      if (i === j) {
-        continue;
-      }
 
+    // Look at the other exchanges
+    for (let j = i + 1; j < exchanges.length; j++) {
       const comparisonExchange = exchanges[j];
 
       currencies.forEach(currency => {
