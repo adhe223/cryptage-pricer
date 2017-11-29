@@ -79,16 +79,20 @@ const _generateDisparityPayload = pricePayload => {
       currencies.forEach(currency => {
         const ratio =
           pricePayload[currentExchange][currency] / pricePayload[comparisonExchange][currency];
+        const potentialGain = Math.abs(1 - ratio);
+
         disparityObject[`${currentExchange}-${comparisonExchange}-${currency}`] = {
           currency,
-          ratio
+          potentialGain
         };
       });
     }
   }
 
   const sortedKeys = Object.keys(disparityObject).sort((a, b) => {
-    return parseFloat(disparityObject[b].ratio) - parseFloat(disparityObject[a].ratio);
+    return (
+      parseFloat(disparityObject[b].potentialGain) - parseFloat(disparityObject[a].potentialGain)
+    );
   });
   const sortedDisparity = [];
 
@@ -96,7 +100,7 @@ const _generateDisparityPayload = pricePayload => {
     sortedDisparity.push({
       exchangePair: key,
       currency: disparityObject[key].currency,
-      ratio: disparityObject[key].ratio
+      potentialGain: disparityObject[key].potentialGain
     });
   });
 
