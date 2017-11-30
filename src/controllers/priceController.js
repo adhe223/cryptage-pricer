@@ -1,6 +1,5 @@
 const coinbase = require('../exchanges/coinbase');
 const bittrex = require('../exchanges/bittrex');
-// const bithumb = require('../exchanges/bithumb');
 const bitfinex = require('../exchanges/bitfinex');
 const supportedCurrencies = require('../currencies');
 
@@ -38,7 +37,6 @@ const _getPrices = currencies => {
   currencies.forEach(currency => {
     pricePromises.push(coinbase.getPrice(currency));
     pricePromises.push(bittrex.getPrice(currency));
-    // pricePromises.push(bithumb.getPrice(currency));
     pricePromises.push(bitfinex.getPrice(currency));
   });
 
