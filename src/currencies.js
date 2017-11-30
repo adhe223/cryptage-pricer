@@ -1,1 +1,1 @@
-module.exports = ['BTC', 'ETH', 'LTC'];
+module.exports = ['ETH', 'LTC'];
