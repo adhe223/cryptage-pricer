@@ -73,11 +73,14 @@ const _generateDisparityPayload = pricePayload => {
     // Look at the other exchanges
     for (let j = 0; j < exchanges.length; j++) {
       const comparisonExchange = exchanges[j];
+      if (currentExchange === comparisonExchange) {
+        continue;
+      }
 
       currencies.forEach(currency => {
         const ratio =
           pricePayload[currentExchange][currency] / pricePayload[comparisonExchange][currency];
-        const potentialPercGain = ratio;
+        const potentialPercGain = (ratio - 1) * 100;
 
         disparityObject[`${currentExchange}-${comparisonExchange}-${currency}`] = {
           currency,
