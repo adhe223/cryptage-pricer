@@ -6,7 +6,8 @@ const currencyToMarketMap = {
   ETH: 'ETHUSD',
   BCC: 'BCHUSD',
   LTC: 'LTCUSD',
-  XMR: 'XMRUSD'
+  XMR: 'XMRUSD',
+  NEO: 'NEOUSD'
 };
 
 const getPrice = currency => {

@@ -4,7 +4,8 @@ const apiBase = 'https://api.binance.com/api/v1/depth';
 const currencyToSymbolMap = {
   BTC: 'BTCUSDT',
   ETH: 'ETHUSDT',
-  BCC: 'BCCUSDT'
+  BCC: 'BCCUSDT',
+  NEO: 'NEOUSDT'
 };
 
 const getPrice = currency => {
