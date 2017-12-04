@@ -1,6 +1,8 @@
 const coinbase = require('../exchanges/coinbase');
 const bittrex = require('../exchanges/bittrex');
 const bitfinex = require('../exchanges/bitfinex');
+const gemini = require('../exchanges/gemini');
+const binance = require('../exchanges/binance');
 const supportedCurrencies = require('../currencies');
 
 const getPrices = (req, res) => {
@@ -32,13 +34,13 @@ const getPriceDisparity = (req, res) => {
 };
 
 const _getPrices = currencies => {
-  const pricePromises = [];
-
-  currencies.forEach(currency => {
-    pricePromises.push(coinbase.getPrice(currency));
-    pricePromises.push(bittrex.getPrice(currency));
-    pricePromises.push(bitfinex.getPrice(currency));
-  });
+  const pricePromises = [
+    ...coinbase.getPricePromises(currencies),
+    ...bittrex.getPricePromises(currencies),
+    ...bitfinex.getPricePromises(currencies),
+    ...gemini.getPricePromises(currencies),
+    ...binance.getPricePromises(currencies)
+  ];
 
   return Promise.all(pricePromises)
     .then(exchangeRates => {
@@ -65,7 +67,6 @@ const _getPrices = currencies => {
 const _generateDisparityPayload = pricePayload => {
   const disparityObject = {};
   const exchanges = Object.keys(pricePayload);
-  const currencies = Object.keys(pricePayload[exchanges[0]]);
 
   for (let i = 0; i < exchanges.length; i++) {
     const currentExchange = exchanges[i];
@@ -77,7 +78,13 @@ const _generateDisparityPayload = pricePayload => {
         continue;
       }
 
+      const currencies = Object.keys(pricePayload[exchanges[i]]);
       currencies.forEach(currency => {
+        if (!pricePayload[comparisonExchange][currency]) {
+          // Comparison exchange doesn't support this currency, move on
+          return;
+        }
+
         const ratio =
           pricePayload[currentExchange][currency] / pricePayload[comparisonExchange][currency];
         const potentialPercGain = (ratio - 1) * 100;

@@ -4,6 +4,8 @@ const apiBase = 'https://bittrex.com/api/v1.1/public/getticker';
 const currencyToMarketMap = {
   BTC: 'USDT-BTC',
   ETH: 'USDT-ETH',
+  BCC: 'USDT-BCC',
+  XMR: 'USDT-XMR',
   LTC: 'USDT-LTC'
 };
 
@@ -30,6 +32,20 @@ const getPrice = currency => {
     });
 };
 
+const getPricePromises = currencies => {
+  const pricePromises = [];
+
+  currencies.forEach(currency => {
+    if (currencyToMarketMap[currency]) {
+      pricePromises.push(getPrice(currency));
+    } else {
+      console.log(`Bittrex does not support ${currency}`);
+    }
+  });
+
+  return pricePromises;
+};
+
 module.exports = {
-  getPrice
+  getPricePromises
 };

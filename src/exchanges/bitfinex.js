@@ -4,7 +4,9 @@ const apiBase = 'https://api.bitfinex.com/v1';
 const currencyToMarketMap = {
   BTC: 'BTCUSD',
   ETH: 'ETHUSD',
-  LTC: 'LTCUSD'
+  BCC: 'BCHUSD',
+  LTC: 'LTCUSD',
+  XMR: 'XMRUSD'
 };
 
 const getPrice = currency => {
@@ -27,6 +29,20 @@ const getPrice = currency => {
     });
 };
 
+const getPricePromises = currencies => {
+  const pricePromises = [];
+
+  currencies.forEach(currency => {
+    if (currencyToMarketMap[currency]) {
+      pricePromises.push(getPrice(currency));
+    } else {
+      console.log(`Bitfinex does not support ${currency}`);
+    }
+  });
+
+  return pricePromises;
+};
+
 module.exports = {
-  getPrice
+  getPricePromises
 };

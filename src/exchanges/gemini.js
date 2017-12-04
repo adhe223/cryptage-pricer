@@ -30,6 +30,20 @@ const getPrice = currency => {
     });
 };
 
+const getPricePromises = currencies => {
+  const pricePromises = [];
+
+  currencies.forEach(currency => {
+    if (currencyToSymbolMap[currency]) {
+      pricePromises.push(getPrice(currency));
+    } else {
+      console.log(`Gemini does not support ${currency}`);
+    }
+  });
+
+  return pricePromises;
+};
+
 module.exports = {
-  getPrice
+  getPricePromises
 };
