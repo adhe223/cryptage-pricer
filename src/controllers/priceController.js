@@ -1,3 +1,5 @@
+const promiseSettle = require('promise-settle');
+
 const coinbase = require('../exchanges/coinbase');
 const bittrex = require('../exchanges/bittrex');
 const gemini = require('../exchanges/gemini');
@@ -40,13 +42,22 @@ const _getPrices = currencies => {
     ...binance.getPricePromises(currencies)
   ];
 
-  return Promise.all(pricePromises)
+  return promiseSettle(pricePromises)
     .then(exchangeRates => {
       const pricePayload = {};
-      Object.keys(exchangeRates).forEach(exchangeRateKey => {
-        const exchange = exchangeRates[exchangeRateKey].exchange;
-        const currency = exchangeRates[exchangeRateKey].currency;
-        const price = exchangeRates[exchangeRateKey].price;
+
+      exchangeRates.forEach(result => {
+        let exchangeData;
+        if (!result.isFulfilled()) {
+          console.log(`Failure fetching an exchange: ${result.reason()}`);
+          return;
+        } else {
+          exchangeData = result.value();
+        }
+
+        const exchange = exchangeData.exchange;
+        const currency = exchangeData.currency;
+        const price = exchangeData.price;
 
         if (!pricePayload[exchange]) {
           pricePayload[exchange] = {};
