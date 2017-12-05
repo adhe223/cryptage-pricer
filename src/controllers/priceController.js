@@ -1,6 +1,5 @@
 const coinbase = require('../exchanges/coinbase');
 const bittrex = require('../exchanges/bittrex');
-const bitfinex = require('../exchanges/bitfinex');
 const gemini = require('../exchanges/gemini');
 const binance = require('../exchanges/binance');
 const supportedCurrencies = require('../currencies');
@@ -37,7 +36,6 @@ const _getPrices = currencies => {
   const pricePromises = [
     ...coinbase.getPricePromises(currencies),
     ...bittrex.getPricePromises(currencies),
-    ...bitfinex.getPricePromises(currencies),
     ...gemini.getPricePromises(currencies),
     ...binance.getPricePromises(currencies)
   ];
