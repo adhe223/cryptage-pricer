@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const priceRoutes = require('./routes/priceRoutes');
-const FiatConverter = require('./FiatConverter');
 
 const port = process.env.PORT || 8080;
 
@@ -19,5 +18,3 @@ console.log('RESTful API server started on: ' + port);
 app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + ' not found' });
 });
-
-FiatConverter.init();
