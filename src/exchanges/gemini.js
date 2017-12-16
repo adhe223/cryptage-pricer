@@ -22,7 +22,8 @@ const getPrice = currency => {
       return {
         exchange: 'gemini',
         currency,
-        price: payload['ask']
+        bid: payload['bid'],
+        ask: payload['ask']
       };
     })
     .catch(err => {

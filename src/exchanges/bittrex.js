@@ -25,7 +25,8 @@ const getPrice = currency => {
       return {
         exchange: 'bittrex',
         currency,
-        price: payload.result['Ask']
+        bid: payload.result['Bid'],
+        ask: payload.result['Ask']
       };
     })
     .catch(err => {

@@ -22,13 +22,18 @@ const getPrice = (currency, converter) => {
       if (payload.status !== '0000') {
         throw new Error('Error fetching from bithumb');
       }
-      return fiatConverter.convert(payload.data.buy_price, 'KRW');
+
+      const buyConversion = fiatConverter.convert(payload.sell_price, 'KRW');
+      const askConversion = fiatConverter.convert(payload.data.buy_price, 'KRW');
+
+      return Promise.all([buyConversion, askConversion]);
     })
-    .then(usdAmount => {
+    .then(usdAmounts => {
       return {
         exchange: 'bithumb',
         currency,
-        price: usdAmount
+        bid: usdAmounts[0],
+        ask: usdAmounts[1]
       };
     })
     .catch(err => {

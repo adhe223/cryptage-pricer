@@ -20,7 +20,8 @@ const getPrice = currency => {
       return {
         exchange: 'binance',
         currency,
-        price: payload.bids[0][0] // Wow their API is trash
+        bid: payload.bids[0][0], // Wow their API is trash
+        ask: payload.asks[0][0]
       };
     })
     .catch(err => {

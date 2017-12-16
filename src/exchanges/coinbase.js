@@ -1,3 +1,5 @@
+// TODO: Switch to GDAX API. But should be close in the meantime
+
 const fetch = require('node-fetch');
 const baseApi = 'https://api.coinbase.com/v2/exchange-rates';
 
@@ -19,7 +21,8 @@ const getPrice = currency => {
       return {
         exchange: 'coinbase',
         currency,
-        price: payload.data.rates['USD']
+        bid: payload.data.rates['USD'], // TODO: Don't cheat here. Okay for now because coinbase will be a small spread
+        ask: payload.data.rates['USD']
       };
     })
     .catch(err => {

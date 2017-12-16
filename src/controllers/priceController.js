@@ -55,15 +55,15 @@ const _getPrices = currencies => {
           exchangeData = result.value();
         }
 
-        const exchange = exchangeData.exchange;
-        const currency = exchangeData.currency;
-        const price = exchangeData.price;
-
+        const { exchange, currency, bid, ask } = exchangeData;
         if (!pricePayload[exchange]) {
           pricePayload[exchange] = {};
         }
 
-        pricePayload[exchange][currency] = price;
+        pricePayload[exchange][currency] = {
+          bid,
+          ask
+        };
       });
 
       return pricePayload;
@@ -95,7 +95,8 @@ const _generateDisparityPayload = pricePayload => {
         }
 
         const ratio =
-          pricePayload[currentExchange][currency] / pricePayload[comparisonExchange][currency];
+          pricePayload[currentExchange][currency].bid /
+          pricePayload[comparisonExchange][currency].ask;
         const potentialPercGain = (ratio - 1) * 100;
 
         disparityObject[`${currentExchange}-${comparisonExchange}-${currency}`] = {
