@@ -1,6 +1,6 @@
 const promiseSettle = require('promise-settle');
 
-const coinbase = require('../exchanges/coinbase');
+const gdax = require('../exchanges/gdax');
 const bittrex = require('../exchanges/bittrex');
 const gemini = require('../exchanges/gemini');
 const binance = require('../exchanges/binance');
@@ -36,7 +36,7 @@ const getPriceDisparity = (req, res) => {
 
 const _getPrices = currencies => {
   const pricePromises = [
-    ...coinbase.getPricePromises(currencies),
+    ...gdax.getPricePromises(currencies),
     ...bittrex.getPricePromises(currencies),
     ...gemini.getPricePromises(currencies),
     ...binance.getPricePromises(currencies)

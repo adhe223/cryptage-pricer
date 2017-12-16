@@ -1,26 +1,26 @@
 const fetch = require('node-fetch');
-const baseApi = 'https://api.coinbase.com/v2/exchange-rates';
+const baseApi = 'https://api.gdax.com/products';
 
-const supportedCurrencies = {
-  BTC: true,
-  ETH: true,
-  LTC: true
+const currencyToMarketMap = {
+  BTC: 'BTC-USD',
+  ETH: 'ETH-USD',
+  LTC: 'LTC-USD'
 };
 
 const getPrice = currency => {
-  return fetch(`${baseApi}?currency=${currency}`)
+  return fetch(`${baseApi}/${currencyToMarketMap[currency]}/ticker`)
     .then(res => {
       if (!res.ok) {
-        throw new Error('Failed to fetch from coinbase');
+        throw new Error('Failed to fetch from gdax');
       }
       return res.json();
     })
     .then(payload => {
       return {
-        exchange: 'coinbase',
+        exchange: 'gdax',
         currency,
-        bid: payload.data.rates['USD'], // TODO: Don't cheat here. Okay for now because coinbase will be a small spread
-        ask: payload.data.rates['USD']
+        bid: payload['bid'],
+        ask: payload['ask']
       };
     })
     .catch(err => {
@@ -32,10 +32,10 @@ const getPricePromises = currencies => {
   const pricePromises = [];
 
   currencies.forEach(currency => {
-    if (supportedCurrencies[currency]) {
+    if (currencyToMarketMap[currency]) {
       pricePromises.push(getPrice(currency));
     } else {
-      console.log(`Coinbase does not support ${currency}`);
+      console.log(`gdax does not support ${currency}`);
     }
   });
 
