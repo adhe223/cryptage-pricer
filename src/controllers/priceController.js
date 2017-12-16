@@ -78,30 +78,30 @@ const _generateDisparityPayload = pricePayload => {
   const exchanges = Object.keys(pricePayload);
 
   for (let i = 0; i < exchanges.length; i++) {
-    const currentExchange = exchanges[i];
+    const sellSide = exchanges[i];
 
     // Look at the other exchanges
     for (let j = 0; j < exchanges.length; j++) {
-      const comparisonExchange = exchanges[j];
-      if (currentExchange === comparisonExchange) {
+      const buySide = exchanges[j];
+      if (sellSide === buySide) {
         continue;
       }
 
       const currencies = Object.keys(pricePayload[exchanges[i]]);
       currencies.forEach(currency => {
-        if (!pricePayload[comparisonExchange][currency]) {
+        if (!pricePayload[buySide][currency]) {
           // Comparison exchange doesn't support this currency, move on
           return;
         }
 
-        const ratio =
-          pricePayload[currentExchange][currency].bid /
-          pricePayload[comparisonExchange][currency].ask;
+        const ratio = pricePayload[sellSide][currency].bid / pricePayload[buySide][currency].ask;
         const potentialPercGain = (ratio - 1) * 100;
 
-        disparityObject[`${currentExchange}-${comparisonExchange}-${currency}`] = {
+        disparityObject[`sell_${sellSide}--buy_${buySide}--${currency}`] = {
           currency,
-          potentialPercGain
+          potentialPercGain,
+          buyExchange: buySide,
+          sellExchange: sellSide
         };
       });
     }
@@ -119,7 +119,9 @@ const _generateDisparityPayload = pricePayload => {
     sortedDisparity.push({
       exchangePair: key,
       currency: disparityObject[key].currency,
-      potentialPercGain: disparityObject[key].potentialPercGain
+      potentialPercGain: disparityObject[key].potentialPercGain,
+      buyExchange: disparityObject[key].buyExchange,
+      sellExchange: disparityObject[key].sellExchange
     });
   });
 
