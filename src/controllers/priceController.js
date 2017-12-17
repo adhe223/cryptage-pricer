@@ -2,6 +2,7 @@ const promiseSettle = require('promise-settle');
 
 const gdax = require('../exchanges/gdax');
 const bittrex = require('../exchanges/bittrex');
+const cryptopia = require('../exchanges/cryptopia');
 const gemini = require('../exchanges/gemini');
 const binance = require('../exchanges/binance');
 const supportedCurrencies = require('../currencies');
@@ -38,6 +39,7 @@ const _getPrices = currencies => {
   const pricePromises = [
     ...gdax.getPricePromises(currencies),
     ...bittrex.getPricePromises(currencies),
+    ...cryptopia.getPricePromises(currencies),
     ...gemini.getPricePromises(currencies),
     ...binance.getPricePromises(currencies)
   ];
