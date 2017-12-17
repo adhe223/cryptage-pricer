@@ -7,7 +7,11 @@ const currencyToMarketMap = {
   BCC: 'USDT-BCC',
   XMR: 'USDT-XMR',
   LTC: 'USDT-LTC',
-  NEO: 'USDT-NEO'
+  NEO: 'USDT-NEO',
+  XRP: 'USDT-XRP',
+  DASH: 'USDT-DASH',
+  OMG: 'USDT-OMG',
+  ZEC: 'USDT-ZEC'
 };
 
 const getPrice = currency => {
