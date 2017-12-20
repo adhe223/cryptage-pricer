@@ -4,7 +4,8 @@ const baseApi = 'https://api.gdax.com/products';
 const currencyToMarketMap = {
   BTC: 'BTC-USD',
   ETH: 'ETH-USD',
-  LTC: 'LTC-USD'
+  LTC: 'LTC-USD',
+  BCC: 'BCH-USD'
 };
 
 const getPrice = currency => {
